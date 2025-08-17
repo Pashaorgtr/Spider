@@ -12,7 +12,7 @@ Web sayfalarından **zincirleme domain tespiti** yapan Python crawler yazılım�
 ```bash
 # Projeyi klonla
 git clone https://github.com/Pashaorgtr/Spider.git
-cd spider-domain-crawler
+cd spider
 
 # Virtual environment oluştur
 python3 -m venv spider-venv
