@@ -39,7 +39,7 @@ python main.py https://pasha.org.tr
 ## Proje Yapısı
 
 ```
-url-crawler/
+spider/
 ├── modules/                 # Ana modüller
 │   ├── __init__.py         
 │   ├── url_crawler.py      # URL crawler
