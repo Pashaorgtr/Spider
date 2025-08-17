@@ -1,0 +1,46 @@
+# Engellenen Domain Dosyası Örneği
+# Her satırda bir domain olmalıdır
+# # ile başlayan satırlar yorum satırıdır
+
+# Sosyal medya platformları
+facebook.com
+twitter.com
+instagram.com
+linkedin.com
+tiktok.com
+snapchat.com
+pinterest.com
+
+# Arama motorları (opsiyonel)
+google.com
+bing.com
+yahoo.com
+duckduckgo.com
+
+# Video platformları
+youtube.com
+vimeo.com
+dailymotion.com
+twitch.tv
+
+# Reklam ve analitik servisleri
+google-analytics.com
+googletagmanager.com
+doubleclick.net
+googlesyndication.com
+googleadservices.com
+facebook.net
+fbcdn.net
+
+# E-ticaret siteleri (örnek)
+# amazon.com
+# ebay.com
+# aliexpress.com
+
+# Haber siteleri (örnek)
+# cnn.com
+# bbc.com
+# reuters.com
+
+# Not: Bu dosya sadece örnek amaçlıdır
+# İhtiyacınıza göre domain'leri ekleyin veya çıkarın

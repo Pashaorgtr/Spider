@@ -1,0 +1,19 @@
+# Proxy Dosyası Örneği
+# Her satırda bir proxy URL'i olmalıdır
+# # ile başlayan satırlar yorum satırıdır
+
+# HTTP Proxy örnekleri
+# http://proxy1.example.com:8080
+# http://username:password@proxy2.example.com:3128
+# https://proxy3.example.com:8080
+
+# SOCKS Proxy örnekleri  
+# socks5://proxy4.example.com:1080
+# socks4://proxy5.example.com:1080
+
+# IP:Port formatı (HTTP olarak varsayılır)
+# 192.168.1.100:8080
+# 10.0.0.1:3128
+
+# Not: Bu dosya sadece örnek amaçlıdır
+# Gerçek proxy'leri buraya ekleyin
