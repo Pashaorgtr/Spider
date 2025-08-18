@@ -137,7 +137,7 @@ DEFAULT_BLOCKED_DOMAINS = [
 ]
 
 # Domain engelleme seçenekleri
-DOMAIN_BLOCKING_MODE = 'exact'  # 'exact', 'subdomain', 'contains'
+DOMAIN_BLOCKING_MODE = 'exact', 'subdomain', 'contains'
 # exact: Tam eşleşme (google.com sadece google.com'u engeller)
 # subdomain: Alt domain dahil (google.com, www.google.com, maps.google.com'u engeller)  
 # contains: İçeren (google.com, mygoogle.com, google.com.tr'yi engeller)
