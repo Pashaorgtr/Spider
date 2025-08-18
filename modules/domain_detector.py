@@ -204,7 +204,10 @@ class DomainDetector:
     
     def _is_domain_blocked(self, url: str) -> bool:
         """URL'nin domain'inin engellenip engellenmediğini kontrol eder"""
+        self.logger.debug(f"Domain engelleme kontrolü başlatıldı: use_domain_blocking={self.use_domain_blocking}, blocked_domains_count={len(self.blocked_domains)}")
+        
         if not self.use_domain_blocking or not self.blocked_domains:
+            self.logger.debug(f"Domain engelleme devre dışı veya engellenen domain yok")
             return False
         
         try:
@@ -220,24 +223,38 @@ class DomainDetector:
             if domain.startswith('www.'):
                 domain = domain[4:]
             
+            self.logger.debug(f"Kontrol edilen domain: {domain}, mod: {DOMAIN_BLOCKING_MODE}")
+            
             for blocked_domain in self.blocked_domains:
+                # Engellenen domain'den de www. prefix'ini kaldır
+                normalized_blocked = blocked_domain
+                if normalized_blocked.startswith('www.'):
+                    normalized_blocked = normalized_blocked[4:]
+                
+                self.logger.debug(f"Karşılaştırma: {domain} vs {normalized_blocked}")
+                
                 if DOMAIN_BLOCKING_MODE == 'exact':
                     # Tam eşleşme
-                    if domain == blocked_domain:
+                    if domain == normalized_blocked:
+                        self.logger.debug(f"EXACT eşleşme bulundu: {domain} == {normalized_blocked}")
                         return True
                 elif DOMAIN_BLOCKING_MODE == 'subdomain':
                     # Alt domain dahil
-                    if domain == blocked_domain or domain.endswith('.' + blocked_domain):
+                    if domain == normalized_blocked or domain.endswith('.' + normalized_blocked):
+                        self.logger.debug(f"SUBDOMAIN eşleşme bulundu: {domain} matches {normalized_blocked}")
                         return True
                 elif DOMAIN_BLOCKING_MODE == 'contains':
                     # İçeren
-                    if blocked_domain in domain:
+                    if normalized_blocked in domain:
+                        self.logger.debug(f"CONTAINS eşleşme bulundu: {normalized_blocked} in {domain}")
                         return True
             
+            self.logger.debug(f"Hiç eşleşme bulunamadı: {domain}")
             return False
             
         except Exception as e:
             self.logger.debug(f"Domain engelleme kontrolü hatası {url}: {e}")
+            return False
             return False
     
     def _log_blocked_domain(self, url: str):
@@ -341,11 +358,19 @@ class DomainDetector:
                 domain = self.extract_domain(absolute_url)
                 
                 if self.is_valid_domain_format(domain):
-                    domains.add(domain)
+                    # Domain engelleme kontrolü
+                    test_url = f"https://{domain}"
+                    is_blocked = self._is_domain_blocked(test_url)
+                    self.logger.debug(f"Domain engelleme kontrolü (a): {domain} -> {is_blocked}")
                     
-                    if domain not in self.domain_urls:
-                        self.domain_urls[domain] = set()
-                    self.domain_urls[domain].add(absolute_url)
+                    if not is_blocked:
+                        domains.add(domain)
+                        
+                        if domain not in self.domain_urls:
+                            self.domain_urls[domain] = set()
+                        self.domain_urls[domain].add(absolute_url)
+                    else:
+                        self.logger.info(f"🚫 Domain engellendi (sayfa içi a): {domain}")
         
         # <link> etiketlerinden href'leri al
         for link in soup.find_all('link', href=True):
@@ -355,11 +380,15 @@ class DomainDetector:
                 domain = self.extract_domain(absolute_url)
                 
                 if self.is_valid_domain_format(domain):
-                    domains.add(domain)
-                    
-                    if domain not in self.domain_urls:
-                        self.domain_urls[domain] = set()
-                    self.domain_urls[domain].add(absolute_url)
+                    # Domain engelleme kontrolü
+                    if not self._is_domain_blocked(f"https://{domain}"):
+                        domains.add(domain)
+                        
+                        if domain not in self.domain_urls:
+                            self.domain_urls[domain] = set()
+                        self.domain_urls[domain].add(absolute_url)
+                    else:
+                        self.logger.info(f"🚫 Domain engellendi (sayfa içi): {domain}")
         
         # <img> etiketlerinden src'leri al
         for img in soup.find_all('img', src=True):
@@ -369,11 +398,15 @@ class DomainDetector:
                 domain = self.extract_domain(absolute_url)
                 
                 if self.is_valid_domain_format(domain):
-                    domains.add(domain)
-                    
-                    if domain not in self.domain_urls:
-                        self.domain_urls[domain] = set()
-                    self.domain_urls[domain].add(absolute_url)
+                    # Domain engelleme kontrolü
+                    if not self._is_domain_blocked(f"https://{domain}"):
+                        domains.add(domain)
+                        
+                        if domain not in self.domain_urls:
+                            self.domain_urls[domain] = set()
+                        self.domain_urls[domain].add(absolute_url)
+                    else:
+                        self.logger.info(f"🚫 Domain engellendi (sayfa içi): {domain}")
         
         # <script> etiketlerinden src'leri al
         for script in soup.find_all('script', src=True):
@@ -383,11 +416,15 @@ class DomainDetector:
                 domain = self.extract_domain(absolute_url)
                 
                 if self.is_valid_domain_format(domain):
-                    domains.add(domain)
-                    
-                    if domain not in self.domain_urls:
-                        self.domain_urls[domain] = set()
-                    self.domain_urls[domain].add(absolute_url)
+                    # Domain engelleme kontrolü
+                    if not self._is_domain_blocked(f"https://{domain}"):
+                        domains.add(domain)
+                        
+                        if domain not in self.domain_urls:
+                            self.domain_urls[domain] = set()
+                        self.domain_urls[domain].add(absolute_url)
+                    else:
+                        self.logger.info(f"🚫 Domain engellendi (sayfa içi): {domain}")
         
         return domains
     
