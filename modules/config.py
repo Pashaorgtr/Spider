@@ -103,7 +103,7 @@ PROXY_VALIDATION_URL = 'http://httpbin.org/ip'  # Proxy test URL'i
 PROXY_VALIDATION_TIMEOUT = 5  # Proxy doğrulama timeout
 
 # Domain engelleme ayarları
-USE_DOMAIN_BLOCKING = False  # Varsayılan olarak kapalı
+USE_DOMAIN_BLOCKING = True  # Varsayılan olarak açık
 BLOCKED_DOMAINS_FILE = 'blocked_domains.txt'  # Varsayılan engellenen domain dosyası
 
 # Varsayılan engellenen domain'ler
@@ -137,7 +137,7 @@ DEFAULT_BLOCKED_DOMAINS = [
 ]
 
 # Domain engelleme seçenekleri
-DOMAIN_BLOCKING_MODE = 'exact', 'subdomain', 'contains'
+DOMAIN_BLOCKING_MODE = 'subdomain'  # 'exact', 'subdomain', 'contains'
 # exact: Tam eşleşme (google.com sadece google.com'u engeller)
 # subdomain: Alt domain dahil (google.com, www.google.com, maps.google.com'u engeller)  
 # contains: İçeren (google.com, mygoogle.com, google.com.tr'yi engeller)
