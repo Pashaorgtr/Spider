@@ -133,13 +133,19 @@ def main():
         print("🌐 Proxy kullanılmıyor")
     
     # Domain engelleme ayarları
+    from modules.config import USE_DOMAIN_BLOCKING, DEFAULT_BLOCKED_DOMAINS
     blocked_domains = []
-    use_domain_blocking = False
+    use_domain_blocking = USE_DOMAIN_BLOCKING  # Config'den varsayılan değeri al
+    
+    # Eğer varsayılan domain engelleme açıksa, varsayılan domain'leri ekle
+    if USE_DOMAIN_BLOCKING:
+        blocked_domains.extend(DEFAULT_BLOCKED_DOMAINS)
+        print(f"🚫 Domain engelleme: Varsayılan olarak aktif ({len(DEFAULT_BLOCKED_DOMAINS)} domain)")
     
     if args.block_domains:
         blocked_domains.extend(args.block_domains)
         use_domain_blocking = True
-        print(f"🚫 Domain engelleme: Komut satırından {len(args.block_domains)} domain")
+        print(f"🚫 Domain engelleme: Komut satırından {len(args.block_domains)} domain eklendi")
     
     if args.block_domains_file:
         try:
@@ -156,10 +162,11 @@ def main():
             return 1
     
     if args.use_default_blocked_domains:
-        from modules.config import DEFAULT_BLOCKED_DOMAINS
-        blocked_domains.extend(DEFAULT_BLOCKED_DOMAINS)
-        use_domain_blocking = True
-        print(f"🚫 Domain engelleme: {len(DEFAULT_BLOCKED_DOMAINS)} varsayılan domain eklendi")
+        # Zaten varsayılan olarak eklendiyse, sadece bilgi ver
+        if not USE_DOMAIN_BLOCKING:
+            blocked_domains.extend(DEFAULT_BLOCKED_DOMAINS)
+            use_domain_blocking = True
+        print(f"🚫 Domain engelleme: Varsayılan domain'ler manuel olarak eklendi")
     
     if use_domain_blocking:
         # Duplikatları kaldır
